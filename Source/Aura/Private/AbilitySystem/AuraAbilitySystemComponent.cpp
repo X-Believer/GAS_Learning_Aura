@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+#include "AuraGameplayTags.h"
 #include "Interfaces/IPluginManager.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
