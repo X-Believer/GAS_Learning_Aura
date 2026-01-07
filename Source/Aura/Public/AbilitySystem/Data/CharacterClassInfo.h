@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Abilities/GameplayAbility.h"
 #include "Engine/DataAsset.h"
 #include "CharacterClassInfo.generated.h"
 
@@ -42,6 +43,12 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Default|Damage")
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
 	
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 };
