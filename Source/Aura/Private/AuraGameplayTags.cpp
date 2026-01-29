@@ -153,6 +153,42 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Reduces damage taken from Physical"));
 	
 	/*
+	 * Debuffs
+	 */
+	
+	GameplayTags.Debuff_Burn = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Burn"),
+		FString("Burn Debuff (Fire)"));
+	
+	GameplayTags.Debuff_Stun = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Stun"),
+		FString("Stun Debuff (Lightning)"));
+	
+	GameplayTags.Debuff_Chilled = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Chilled"),
+		FString("Chilled Debuff (Arcane)"));
+	
+	GameplayTags.Debuff_Daze = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Daze"),
+		FString("Daze Debuff (Physical)"));
+	
+	GameplayTags.Debuff_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Duration"),
+		FString("Duration of the Debuff"));
+	
+	GameplayTags.Debuff_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Frequency"),
+		FString("Frequency of the Debuff"));
+	
+	GameplayTags.Debuff_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Chance"),
+		FString("Chance of the Debuff"));
+	
+	GameplayTags.Debuff_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Debuff.Damage"),
+		FString("Damage of the Debuff"));
+	
+	/*
 	 * Meta 
 	 */
 	
@@ -168,6 +204,15 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
+	
+	/*
+	 * Map of Damage Types to Debuffs
+	 */
+	
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Fire, GameplayTags.Debuff_Burn);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Lightning, GameplayTags.Debuff_Stun);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Arcane, GameplayTags.Debuff_Chilled);
+	GameplayTags.DamageTypesToDebuffs.Add(GameplayTags.Damage_Physical, GameplayTags.Debuff_Daze);
 	
 	/*
 	 * Effects
