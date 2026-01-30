@@ -33,6 +33,7 @@ public:
 	bool bStartUpAbilitiesGiven = false;
 	
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	void ForEachAbility(const FForEachAbility& Delegate);
 
