@@ -250,6 +250,22 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString("HitReact ability Tag"));
 	
 	/*
+	 * Passive	
+	 */
+	
+	GameplayTags.Abilities_Passive_HaloOfProtection = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.HaloOfProtection"),
+		FString("Halo of Protection ability Tag"));
+	
+	GameplayTags.Abilities_Passive_LifeSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.LifeSiphon"),
+		FString("Life Siphon ability Tag"));
+	
+	GameplayTags.Abilities_Passive_ManaSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Passive.ManaSiphon"),
+		FString("Mana Siphon ability Tag"));
+	
+	/*
 	 * Abilities_Status
 	 */
 	
