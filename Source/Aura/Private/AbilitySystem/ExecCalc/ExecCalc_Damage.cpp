@@ -8,6 +8,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 struct AuraDamageStatics
 {
@@ -134,6 +135,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	}
 	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle ContextHandle =Spec.GetContext();
 	
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
@@ -155,11 +157,46 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[ResistanceTag];
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key, false);
 		
+		if (DamageTypeValue <= 0.f) continue;
+		
 		float ResistanceValue = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, ResistanceValue);
 		ResistanceValue = FMath::Clamp(ResistanceValue, 0.f, 100.f);
 		
 		DamageTypeValue *= (100.f - ResistanceValue) / 100.f; 
+		
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(ContextHandle))
+		{
+			// 1.override TakeDamage in AuraCharacterBase.
+			// 2. create delegate OnDamageDelegate,broadcast damage received in TakeDamage
+			// 3. Bind Lambda to OnDamageDelegate on the Victim here.
+			// 4. Call UGameplayStatics::ApplyRadialDamageWithFalloff to cause damage (this will result in TakeDamage being called
+			// on the Victim,which will then broadcast OnDamageDelegate)
+			// 5.In Lambda, set DamageTypeValue to the damage received from the broadcast
+			
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatarActor))
+			{
+				CombatInterface->GetOnDamageSignature().AddLambda(
+					[&](float DamageAmount)
+					{
+						DamageTypeValue = DamageAmount;
+					}
+				);
+			}
+			UGameplayStatics::ApplyRadialDamageWithFalloff(
+				TargetAvatarActor,
+				DamageTypeValue,
+				0.f,
+				UAuraAbilitySystemLibrary::GetRadialDamageOrigin(ContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(ContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(ContextHandle),
+				1,
+				UDamageType::StaticClass(),
+				TArray<AActor*>(),
+				SourceAvatarActor,
+				nullptr
+				);
+		}
 		
 		Damage += DamageTypeValue;
 	}
@@ -171,7 +208,6 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	bool bBlocked = FMath::RandRange(1.f, 100.f) < TargetBlockChance;
 	
-	FGameplayEffectContextHandle ContextHandle =Spec.GetContext();
 	UAuraAbilitySystemLibrary::SetIsBlockedHit(ContextHandle, bBlocked);
 	
 	if (bBlocked)
