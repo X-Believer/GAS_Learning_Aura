@@ -45,7 +45,13 @@ public:
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
+	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
+	TSubclassOf<UGameplayEffect> SecondaryAttributes_Infinite;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Common Class Default")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
